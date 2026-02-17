@@ -1,0 +1,48 @@
+@model LuckySpin.ViewModels.PlayersChoice
+@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+@using LuckySpin.Models;
+@{
+    Layout = "_Layout";
+    //TODO: Uncomment the lines below (one at a time) and see how the Players and Games are ordered in the ViewModel
+    Model.Players = Model.Players.OrderBy(p => p.FirstName).ThenBy(p => p.Luck).ToList();
+    Model.Games = Model.Games.OrderByDescending(g => g.Spins.Count).ToList();
+}
+
+<h1>Lucky Spin</h1> 
+<h2>Players Choice</h2> 
+<form asp-action="PlayersChoice" asp-controller="Spinner" method="post">
+<fieldset>
+    <label>
+        <select name="SelectedPlayerId" aria-label="Select a player">
+                    <option selected disabled>Player (Luck)</option>
+            @if (Model?.Players != null)
+            {
+                foreach (Player p in Model.Players)
+                {
+                    <option value="@p.Id">@p.FirstName (@p.Luck)</option>
+                }
+            }
+        </select>
+        <span></span>
+    </label>
+</fieldset>
+<input type="submit" value="Play Game" />
+</form>
+<hr />
+    <h2>Best Previous Games</h2>
+    <table>
+    <thead><tr><th>Game</th><th>Player</th><th>Number of Spins</th></tr></thead>
+    <tbody>
+        <!--TODO: display the running balance for each spin -->
+        @foreach (Game game in Model.Games)
+        {
+            <tr>
+                <td>@game.Id</td>
+                <td>@game.Player.FirstName (@game.Player.Luck)</td>
+                <td>@game.Spins.Count</td>
+            </tr>
+            
+        }
+    </tdbody>
+    </table>
+
