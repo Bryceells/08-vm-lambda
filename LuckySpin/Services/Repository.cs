@@ -35,9 +35,38 @@ namespace LuckySpin.Services
 
         public LeaderBoard leaderBoard()
         {
-            return null; //TODO: Implement the logic to fill a Leaderboard ViewModel based on the Players and their Games and Spins in the database
+            //TODO: Implement the logic to fill a Leaderboard ViewModel based on the Players and their Games and Spins in the database
+            var leaderboard = new LeaderBoard();
+            leaderboard.Entries = getLeaderBoardEntries();
+            return leaderboard;
+            
+
         }
 
+//TODO: using Lambda Expression Methods (at least three) to return Average # of spins and Player name.
+
+        public ICollection<LeaderBoardEntry> getLeaderBoardEntries()
+        {
+            return _dbContext.Players
+                .Select(p => new LeaderBoardEntry
+                {
+                    FirstName = p.FirstName,
+                    TotalSpins = _dbContext.Games.SelectMany(g => g.Spins).Count(),
+                    GameID = _dbContext.Games.Select(g => g.Id).FirstOrDefault()
+                })
+                .OrderBy(e => e.TotalSpins)
+                .ToList();
+        }
+        
 
     }
+
+    public class LeaderBoardEntry
+    {
+        public string FirstName { get; set; }
+        public int TotalSpins { get; set; }
+        public int GameID { get; set; }
+
+    }
+
 }
