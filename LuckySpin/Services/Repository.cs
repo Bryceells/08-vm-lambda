@@ -40,10 +40,4 @@ namespace LuckySpin.Services
 
 
     }
-
-    //TODO: create Supporting Classes for Leaderboard 
-    public class LeaderboardEntry
-    {
-    }
-
 }
