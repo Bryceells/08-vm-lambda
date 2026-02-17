@@ -1,0 +1,26 @@
+@model LuckySpin.ViewModels.LeaderBoard
+@{
+    ViewData["Title"] = "Leaderboard";
+}
+@{
+    Layout = "_Layout";
+}
+<h1>Loserboard</h1>
+<table class="table">
+    <thead>
+        <tr>
+            <th>Player Name</th>
+            <th>Average Spins</th>
+            <th>Game ID</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var entry in Model.Entries)
+        {
+            <tr>
+                <td>@entry.FirstName</td>
+                <td>@entry.AverageSpins</td>
+                <td>@entry.GameID</td>
+            </tr>
+        }
+    </tbody>

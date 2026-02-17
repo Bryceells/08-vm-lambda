@@ -47,15 +47,16 @@ namespace LuckySpin.Services
 
         public ICollection<LeaderBoardEntry> getLeaderBoardEntries()
         {
-            return _dbContext.Players
-                .Select(p => new LeaderBoardEntry
-                {
-                    FirstName = p.FirstName,
-                    TotalSpins = _dbContext.Games.SelectMany(g => g.Spins).Count(),
-                    GameID = _dbContext.Games.Select(g => g.Id).FirstOrDefault()
-                })
-                .OrderBy(e => e.TotalSpins)
-                .ToList();
+            return (ICollection<LeaderBoardEntry>)_dbContext.Games  
+            .GroupBy(g => g.Player)
+            .Select(g => new LeaderBoardEntry
+            {
+                FirstName = g.Key.FirstName,
+                AverageSpins = (int)g.Average(game => game.Spins.Count),
+                GameID = g.Select(game => game.Id).FirstOrDefault()
+            })
+            .OrderBy(e => e.AverageSpins)
+            .ToList();
         }
         
 
@@ -64,7 +65,7 @@ namespace LuckySpin.Services
     public class LeaderBoardEntry
     {
         public string FirstName { get; set; }
-        public int TotalSpins { get; set; }
+        public int AverageSpins { get; set; }
         public int GameID { get; set; }
 
     }
